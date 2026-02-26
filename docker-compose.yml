@@ -1,0 +1,29 @@
+services:
+  # The Load Balancer Container
+  load_balancer:
+    build: .
+    ports:
+      - "8080:8080"
+    networks:
+      - lb_network
+    depends_on:
+      - backend1
+      - backend2
+
+  # Mock Server 1
+  backend1:
+    image: python:3.13-slim
+    command: python -m http.server 8081
+    networks:
+      - lb_network
+
+  # Mock Server 2
+  backend2:
+    image: python:3.13-slim
+    command: python -m http.server 8082
+    networks:
+      - lb_network
+
+networks:
+  lb_network:
+    driver: bridge
